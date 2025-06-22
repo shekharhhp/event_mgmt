@@ -12,6 +12,15 @@
                 <h5>{{ $proposal->title }}</h5>
                 <p>{{ $proposal->description }}</p>
                 <p>Status: <strong>{{ ucfirst($proposal->status) }}</strong></p>
+
+                @if($proposal->presentation_pdf)
+                    <p>
+                        <a href="{{ asset('storage/' . $proposal->presentation_pdf) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            View PDF
+                        </a>
+                    </p>
+                @endif
+
                 <a href="{{ route('talks.edit', $proposal) }}" class="btn btn-sm btn-warning">Edit</a>
             </div>
         </div>

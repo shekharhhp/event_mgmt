@@ -1,17 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\TalkProposalController;
+use App\Http\Controllers\ReviewController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,10 +11,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// Optional: remove if not using HomeController
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-use App\Http\Controllers\TalkProposalController;
-
+// Speaker routes (talk proposals)
 Route::middleware(['auth'])->group(function () {
     Route::get('/talks', [TalkProposalController::class, 'index'])->name('talks.index');
     Route::get('/talks/create', [TalkProposalController::class, 'create'])->name('talks.create');
@@ -31,3 +23,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/talks/{talk}', [TalkProposalController::class, 'update'])->name('talks.update');
 });
 
+// Reviewer dashboard and review submission
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/reviews/{id}', [ReviewController::class, 'show'])->name('reviews.show');
+    Route::post('/reviews/{id}', [ReviewController::class, 'store'])->name('reviews.store');
+});
