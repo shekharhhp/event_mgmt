@@ -70,4 +70,11 @@
 
     {{ $proposals->links() }}
 </div>
+<script>
+    Echo.channel('talks')
+        .listen('.talk-submitted', (e) => {
+            alert(`New proposal submitted by ${e.speaker}: ${e.title}`);
+            // You can also update DOM with Vue/React/etc.
+        });
+</script>
 @endsection
