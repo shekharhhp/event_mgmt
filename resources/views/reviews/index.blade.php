@@ -70,11 +70,12 @@
 
     {{ $proposals->links() }}
 </div>
+<script src="https://js.pusher.com/8.0/pusher.min.js"></script>
 <script>
-    Echo.channel('talks')
+    window.Echo.channel('reviewers')
         .listen('.talk-submitted', (e) => {
-            alert(`New proposal submitted by ${e.speaker}: ${e.title}`);
-            // You can also update DOM with Vue/React/etc.
+            alert(`New talk submitted: ${e.proposal.title} by ${e.proposal.speaker.name}`);
+            location.reload(); // or update DOM dynamically
         });
 </script>
 @endsection

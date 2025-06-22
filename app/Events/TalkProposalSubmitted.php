@@ -1,12 +1,14 @@
 <?php
 
+// app/Events/TalkProposalSubmitted.php
+
 namespace App\Events;
 
 use App\Models\TalkProposal;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\InteractsWithSockets;
 
 class TalkProposalSubmitted implements ShouldBroadcast
 {
@@ -16,20 +18,16 @@ class TalkProposalSubmitted implements ShouldBroadcast
 
     public function __construct(TalkProposal $proposal)
     {
-        $this->proposal = $proposal;
+        $this->proposal = $proposal->load('speaker');
     }
 
     public function broadcastOn()
     {
-        return new Channel('talk-proposals');
+        return new Channel('reviewers');
     }
 
-    public function broadcastWith()
+    public function broadcastAs()
     {
-        return [
-            'id' => $this->proposal->id,
-            'title' => $this->proposal->title,
-            'speaker' => $this->proposal->speaker->name,
-        ];
+        return 'talk-submitted';
     }
 }

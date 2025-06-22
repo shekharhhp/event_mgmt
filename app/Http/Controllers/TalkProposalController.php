@@ -40,7 +40,7 @@ class TalkProposalController extends Controller
             'description' => $request->description,
             'speaker_id' => Auth::id(),
             'presentation_pdf' => $path,
-            'status' => 'submitted',
+            'status' => 'pending',
         ]);
 
         $proposal->tags()->sync($request->tags);
@@ -102,7 +102,7 @@ class TalkProposalController extends Controller
             ]);
         }
 
-        broadcast(new TalkProposalSubmitted($talk))->toOthers();
+        broadcast(new TalkProposalSubmitted($proposal))->toOthers();
 
         return redirect()->route('talks.index')->with('success', 'Talk updated.');
     }
