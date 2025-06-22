@@ -46,27 +46,27 @@ class ReviewController extends Controller
 
     // Store submitted review
     public function store(Request $request, $id)
-    {
-        $request->validate([
-            'comments' => 'required|string',
-            'rating' => 'required|numeric|min:1|max:5'
-        ]);
+{
+    $request->validate([
+        'comments' => 'required|string',
+        'rating' => 'required|integer|min:1|max:5',
+        'status' => 'required|in:approved,rejected',
+    ]);
 
-        $proposal = TalkProposal::findOrFail($id);
+    $proposal = TalkProposal::findOrFail($id);
 
-        Review::create([
-            'talk_proposal_id' => $proposal->id,
-            'reviewer_id' => Auth::id(),
-            'comments' => $request->comments,
-            'rating' => $request->rating,
-        ]);
+    // Save review
+    Review::create([
+        'talk_proposal_id' => $proposal->id,
+        'reviewer_id' => Auth::id(),
+        'comments' => $request->comments,
+        'rating' => $request->rating,
+    ]);
 
-        // Optionally: update status based on reviews
-        $proposal->status = 'under_review';
-        $proposal->save();
+    // Update proposal status
+    $proposal->status = $request->status;
+    $proposal->save();
 
-        // Optionally: trigger event/email to speaker
-
-        return redirect()->route('reviews.index')->with('success', 'Review submitted successfully.');
-    }
+    return redirect()->route('reviews.show', $proposal->id)->with('success', 'Review submitted and proposal status updated.');
+}
 }

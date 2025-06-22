@@ -13,10 +13,14 @@ use App\Events\TalkProposalSubmitted;
 class TalkProposalController extends Controller
 {
     public function index()
-    {
-        $proposals = TalkProposal::with(['speaker', 'tags'])->where('speaker_id', Auth::id())->get();
-        return view('talks.index', compact('proposals'));
-    }
+   {
+    $proposals = TalkProposal::with(['speaker', 'tags', 'reviews.reviewer'])
+        ->where('speaker_id', Auth::id())
+        ->get();
+
+    return view('talks.index', compact('proposals'));
+   }
+
 
     public function create()
     {
@@ -85,10 +89,13 @@ class TalkProposalController extends Controller
         }
 
         if ($request->hasFile('presentation_pdf')) {
-            Storage::disk('public')->delete($talk->presentation_pdf);
-            $talk->presentation_pdf = $request->file('presentation_pdf')->store('proposals', 'public');
-            $changes['presentation_pdf'] = true;
+        if ($talk->presentation_pdf) {
+            Storage::disk('public')->delete($talk->presentation_pdf); 
         }
+        $talk->presentation_pdf = $request->file('presentation_pdf')->store('proposals', 'public');
+        $changes['presentation_pdf'] = true;
+}
+
 
         $talk->save();
         $talk->tags()->sync($request->tags);
@@ -102,7 +109,7 @@ class TalkProposalController extends Controller
             ]);
         }
 
-        broadcast(new TalkProposalSubmitted($proposal))->toOthers();
+        broadcast(new TalkProposalSubmitted($talk))->toOthers();
 
         return redirect()->route('talks.index')->with('success', 'Talk updated.');
     }

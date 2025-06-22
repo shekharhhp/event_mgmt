@@ -72,10 +72,20 @@
 </div>
 <script src="https://js.pusher.com/8.0/pusher.min.js"></script>
 <script>
-    window.Echo.channel('reviewers')
-        .listen('.talk-submitted', (e) => {
-            alert(`New talk submitted: ${e.proposal.title} by ${e.proposal.speaker.name}`);
-            location.reload(); // or update DOM dynamically
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+        if (typeof window.Echo !== 'undefined') {
+            window.Echo.channel('reviewers')
+                .listen('.talk-submitted', (e) => {
+                    alert(`New talk submitted: ${e.proposal.title} by ${e.proposal.speaker.name}`);
+                    location.reload();
+                });
+
+            window.Echo.connector.pusher.connection.bind('connected', () => {
+                console.log('Pusher connected');
+            });
+        } else {
+            console.error('Echo is not initialized.');
+        }
+    });
 </script>
 @endsection
