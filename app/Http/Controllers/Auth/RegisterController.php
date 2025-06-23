@@ -14,7 +14,7 @@ class RegisterController extends Controller
 {
     use RegistersUsers;
 
-    // ✅ Remove this to avoid static redirect:
+    // Remove this to avoid static redirect:
     // protected $redirectTo = '/talks';
 
     public function __construct()
@@ -49,7 +49,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * ✅ Dynamically redirect based on user role after registration
+     * Dynamically redirect based on user role after registration
      */
     protected function registered(Request $request, $user)
     {

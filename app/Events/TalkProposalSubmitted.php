@@ -1,7 +1,5 @@
 <?php
 
-// app/Events/TalkProposalSubmitted.php
-
 namespace App\Events;
 
 use App\Models\TalkProposal;

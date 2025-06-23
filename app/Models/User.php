@@ -51,13 +51,13 @@ class User extends Authenticatable
         return $this->roles()->where('name', $roleName)->exists();
     }
 
-    // public function assignRole($roleName)
-    // {
-    // $role = Role::where('name', $roleName)->first();
-    // if ($role) {
-    //     $this->roles()->attach($role->id);
-    // }
+    public function assignRole($roleName)
+    {
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $this->roles()->attach($role->id);
+        }
     
-    // }      
+    }      
 
 }

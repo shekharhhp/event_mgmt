@@ -69,4 +69,5 @@ class ReviewController extends Controller
 
     return redirect()->route('reviews.show', $proposal->id)->with('success', 'Review submitted and proposal status updated.');
 }
+
 }
